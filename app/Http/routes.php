@@ -7,3 +7,6 @@ Route::get('/sample', function () {
 Route::get('/sitemap', function () {
     return 'SiteMap';
 });
+
+Route::get('/upload',   'UploadFileController@index');
+Route::post('/upload',  'UploadFileController@upload');
