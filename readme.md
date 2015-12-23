@@ -15,6 +15,10 @@
 ```
 
 ```
+% php vendor/bin/phpunit tests/Http
+```
+
+```
 % php vendor/bin/phpunit --filter=SampleTest
 ```
 
