@@ -27,7 +27,8 @@
 % php -S localhost:8000 -t public 
 ```
 
-## HTML
+
+## HTTP TestCase
 
 ```html
 <html>
@@ -56,8 +57,6 @@
 </body>
 </html>
 ```
-
-## TestCase
 
 ```php
 <?php
@@ -189,3 +188,73 @@ class SampleTest extends TestCase
 }
 ```
 
+## Elequent TestCase
+
+```php
+<?php
+
+use App\Memo;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+class MemoTest extends TestCase
+{
+    use DatabaseMigrations;
+    use DatabaseTransactions;
+
+    public function testExample()
+    {
+        factory(Memo::class)->create(['text' => 'テストメモ1']);
+        factory(Memo::class)->create(['text' => 'テストメモ2']);
+        factory(Memo::class)->create(['text' => 'テストメモ3']);
+
+        $memos = Memo::all();
+
+        $this->assertCount(3, $memos);
+
+        $this->assertEquals('テストメモ1', Memo::first()->text);
+
+        $this->assertEquals('テストメモ3', Memo::last1()->text);
+    }
+}
+
+```
+
+
+## Repository TestCase
+
+```php
+<?php
+
+use App\Repositories\MemoRepositoryInterface;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+class MemoRepositoryTest extends TestCase
+{
+    use DatabaseMigrations;
+    use DatabaseTransactions;
+
+    protected $repo;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->repo = $this->app->make(MemoRepositoryInterface::class);
+    }
+
+    public function testExample()
+    {
+        $this->repo->create('Spiral Life');
+        $this->repo->create('LR');
+        $this->repo->create('Minekawa Takako');
+
+        $memos = $this->repo->getAll();
+
+        $this->assertCount(3, $memos);
+
+        $this->assertEquals('Spiral Life', $memos[0]->text);
+    }
+}
+
+```
